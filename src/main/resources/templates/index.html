@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot Todo App</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>My Tasks</h1>
+        <p th:text="${#lists.size(todos)} + ' tasks remaining'">0 tasks remaining</p>
+    </div>
+
+    <form action="/add" method="post" class="add-form">
+        <input type="text" name="title" placeholder="What needs to be done?" required autocomplete="off">
+        <button type="submit">Add</button>
+    </form>
+
+    <ul class="todo-list">
+        <li th:each="todo : ${todos}" th:classappend="${todo.completed ? 'completed' : ''}">
+            
+            <form th:action="@{/toggle/{id}(id=${todo.id})}" method="post" style="display:inline;">
+                <button type="submit" class="check-btn">
+                    <span th:if="${todo.completed}">&#10003;</span>
+                    <span th:unless="${todo.completed}"></span>
+                </button>
+            </form>
+
+            <span class="task-title" th:text="${todo.title}">Task Name</span>
+
+            <form th:action="@{/delete/{id}(id=${todo.id})}" method="post" class="delete-form">
+                <button type="submit" class="delete-btn" title="Delete Task">&times;</button>
+            </form>
+        </li>
+    </ul>
+
+    <div th:if="${#lists.isEmpty(todos)}" class="empty-state">
+        <p>No tasks yet! Add one above.</p>
+    </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
